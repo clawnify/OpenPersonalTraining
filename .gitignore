@@ -1,0 +1,8 @@
+node_modules
+dist
+data.db
+.DS_Store
+*.log
+.vite
+.wrangler
+.dev.vars

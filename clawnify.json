@@ -1,0 +1,52 @@
+{
+  "$schema": "https://app.clawnify.com/schema/v1/clawnify.json",
+  "version": 1,
+  "name": "Personal Trainer Studio",
+  "description": "All-in-one platform for personal trainers and online coaches: manage clients, build workouts from a library of 800+ illustrated exercises, assign programs, schedule sessions, and track payments. An open alternative to Trainerize, TrueCoach, and My PT Hub.",
+  "icon": "icon.svg",
+  "tags": ["fitness", "personal-training", "coaching", "workouts", "scheduling"],
+
+  "app": {
+    "framework": "preact+hono",
+    "database": true,
+    "storage": false
+  },
+
+  "api": {
+    "public_routes": [
+      { "path": "/api/share/*", "methods": ["GET"] }
+    ]
+  },
+
+  "deploy": {
+    "title": "Deploy your Training Studio",
+    "subtitle": "Like Trainerize or TrueCoach — clients, workouts and scheduling, customized in minutes",
+    "prompts": [
+      {
+        "key": "business_name",
+        "label": "Your coaching business name",
+        "placeholder": "e.g. Rivera Strength, Momentum Coaching",
+        "required": true
+      },
+      {
+        "key": "specialty",
+        "label": "What's your focus?",
+        "placeholder": "e.g. Strength & conditioning, weight loss, online coaching, rehab, running"
+      },
+      {
+        "key": "clients",
+        "label": "Add a few starter clients (optional)",
+        "type": "textarea",
+        "placeholder": "e.g. Jamie (lose 5kg), Casey (first pull-up), Riley (sub-50 10k)..."
+      },
+      {
+        "key": "details",
+        "label": "Any other details?",
+        "type": "textarea",
+        "placeholder": "Session pricing, your go-to workouts, brand colors, in-person vs online..."
+      }
+    ]
+  },
+
+  "agent": "agent.md"
+}
