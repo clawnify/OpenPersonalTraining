@@ -1,13 +1,12 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { initDB, query, get, run } from "./db.js";
+import { createApp, createRoute, z } from "@clawnify/app";
+import { query, get, run } from "./db.js";
 
 type Env = { Bindings: { DB: D1Database; CLAWNIFY_TOKEN?: string } };
 
-const app = new OpenAPIHono<Env>();
-
-app.use("*", async (c, next) => {
-  initDB(c.env);
-  await next();
+const app = createApp<Env>({
+  title: "open-trainer API",
+  version: "1.0.0",
+  description: "Personal training & coaching platform API",
 });
 
 // ── Shared Schemas ─────────────────────────────────────────────────
@@ -1225,13 +1224,6 @@ app.get("/api/share/:token", async (c) => {
     });
   }
   return c.html(html);
-});
-
-// ── OpenAPI doc + agent contract ───────────────────────────────────
-
-app.doc("/api/openapi.json", {
-  openapi: "3.0.0",
-  info: { version: "1.0.0", title: "open-trainer API", description: "Personal training & coaching platform API" },
 });
 
 export default app;
