@@ -2,7 +2,7 @@
 
 # OpenPersonalTraining: The Open-Source Trainerize & TrueCoach Alternative
 
-[![Deploy with Clawnify](https://app.clawnify.com/deploy-button.svg)](https://app.clawnify.com/deploy?repo=clawnify/open-personal-training)
+[![Deploy with Clawnify](https://app.clawnify.com/deploy-button.svg)](https://app.clawnify.com/deploy?repo=clawnify/OpenPersonalTraining)
 
 An all-in-one platform for personal trainers and online coaches. Manage your clients, build workouts from a library of **800+ illustrated exercises**, assign programs, schedule sessions, and track payments — all in one place. Built with **Preact + Tailwind CSS + Hono + D1**. Deploys to Cloudflare Workers via [Clawnify](https://clawnify.com).
 
@@ -27,7 +27,7 @@ The library is seeded at build time from the [free-exercise-db](https://github.c
 ## Quickstart
 
 ```bash
-git clone https://github.com/clawnify/open-personal-training.git
+git clone https://github.com/clawnify/OpenPersonalTraining.git
 cd open-personal-training
 pnpm install
 pnpm dev
