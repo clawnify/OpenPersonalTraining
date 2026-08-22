@@ -1,6 +1,6 @@
-<img src="readme-banner.png" alt="Personal Trainer Studio preview" />
+<img src="readme-banner.png" alt="OpenPersonalTraining preview" />
 
-# Open Personal Training: The Open-Source Trainerize & TrueCoach Alternative
+# OpenPersonalTraining: The Open-Source Trainerize & TrueCoach Alternative
 
 [![Deploy with Clawnify](https://app.clawnify.com/deploy-button.svg)](https://app.clawnify.com/deploy?repo=clawnify/open-personal-training)
 

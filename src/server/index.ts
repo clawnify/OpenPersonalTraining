@@ -4,7 +4,7 @@ import { query, get, run } from "./db.js";
 type Env = { Bindings: { DB: D1Database; CLAWNIFY_TOKEN?: string } };
 
 const app = createApp<Env>({
-  title: "open-trainer API",
+  title: "OpenPersonalTraining API",
   version: "1.0.0",
   description: "Personal training & coaching platform API",
 });

@@ -1,4 +1,4 @@
-# Personal Trainer Studio — agent guide
+# OpenPersonalTraining — agent guide
 
 This app is a coaching platform for a personal trainer or online coach. It manages
 **clients**, a seeded **exercise library** (800+ illustrated exercises), reusable **workouts**
