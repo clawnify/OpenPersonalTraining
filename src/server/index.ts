@@ -1,5 +1,7 @@
 import { createApp, createRoute, z } from "@clawnify/app";
 import { query, get, run } from "./db.js";
+import { EXERCISE_COLUMNS, EXERCISE_SEED } from "./seed-exercises.js";
+import { DEMO_SEED } from "./seed-demo.js";
 
 type Env = { Bindings: { DB: D1Database; CLAWNIFY_TOKEN?: string } };
 
@@ -7,6 +9,69 @@ const app = createApp<Env>({
   title: "OpenPersonalTraining API",
   version: "1.0.0",
   description: "Personal training & coaching platform API",
+});
+
+// ── First-run seeding ──────────────────────────────────────────────
+// A Clawnify deploy applies schema.sql as DDL only — an INSERT in that file
+// fails the whole deploy — so the exercise library and the demo data are
+// written here, on the first request after the tables exist.
+//
+// Every seed row carries an explicit id and goes in with INSERT OR IGNORE, so
+// two isolates racing on a cold start cannot duplicate anything.
+
+/** D1 rejects a query with more than 100 bound parameters. */
+const MAX_BOUND_PARAMS = 100;
+
+/** Set once per isolate — the fast path for every request after the first. */
+let seeded = false;
+
+/** Insert rows in batches small enough to stay under D1's bound-parameter cap. */
+async function insertSeedRows(
+  table: string,
+  columns: readonly string[],
+  rows: readonly (readonly (string | number | null)[])[],
+): Promise<void> {
+  const rowsPerStatement = Math.max(1, Math.floor(MAX_BOUND_PARAMS / columns.length));
+  const placeholders = `(${columns.map(() => "?").join(", ")})`;
+  for (let i = 0; i < rows.length; i += rowsPerStatement) {
+    const batch = rows.slice(i, i + rowsPerStatement);
+    await run(
+      `INSERT OR IGNORE INTO ${table} (${columns.join(", ")}) VALUES ${batch.map(() => placeholders).join(", ")}`,
+      batch.flat() as unknown[],
+    );
+  }
+}
+
+/**
+ * Seeds the exercise library and the demo data, each only while its table is
+ * still empty — so a redeploy never resurrects rows the user deleted, and
+ * clearing the demo data does not drag the exercise library back in with it.
+ * Never throws: a failure here must not take a request down with it.
+ */
+async function ensureSeeded(): Promise<void> {
+  if (seeded) return;
+  try {
+    const count = async (table: string) =>
+      (await get<{ v: number }>(`SELECT COUNT(*) v FROM ${table}`))?.v ?? 0;
+
+    if ((await count("exercises")) === 0) {
+      await insertSeedRows("exercises", EXERCISE_COLUMNS, EXERCISE_SEED);
+    }
+    // Demo sessions/payments/workout_exercises reference clients, workouts and
+    // exercises by id, so the tables go in the order DEMO_SEED lists them.
+    if ((await count("clients")) === 0) {
+      for (const { table, columns, rows } of DEMO_SEED) await insertSeedRows(table, columns, rows);
+    }
+    seeded = true;
+  } catch {
+    seeded = false;
+  }
+}
+
+// Runs after createApp()'s own initDB(c.env) middleware, so the DB is ready.
+app.use("*", async (c, next) => {
+  await ensureSeeded();
+  await next();
 });
 
 // ── Shared Schemas ─────────────────────────────────────────────────
