@@ -9,7 +9,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@clawnify/app": "^0.1.0",
+    "@clawnify/app": "^0.2.1",
     "@clawnify/db": "^0.4.1",
     "@hono/zod-openapi": "^0.18.0",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -30,7 +30,8 @@
     "preact": "^10.25.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^4.2.2",
-    "zod": "^3.24.0"
+    "zod": "^3.24.0",
+    "@phosphor-icons/react": "^2.1.10"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.0",
