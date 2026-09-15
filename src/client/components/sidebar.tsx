@@ -1,3 +1,4 @@
+import { AppNav, embedded } from "@clawnify/app/client";
 import { useApp } from "../context";
 import { Dumbbell, LayoutDashboard, Users, ClipboardList, CalendarDays, CreditCard } from "lucide-preact";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,20 @@ const navItems: { view: View; path: string; label: string; icon: typeof LayoutDa
 
 export function Sidebar({ currentView }: { currentView: View }) {
   const { navigate, stats } = useApp();
+
+  if (embedded) {
+    const icons: Record<View, string> = {
+      dashboard: "home", clients: "users", workouts: "clipboard-list",
+      exercises: "list-checks", schedule: "calendar-days", payments: "credit-card",
+    };
+    return <AppNav title="Personal Training" icon="users" active={currentView}
+      groups={[{ items: navItems.map(item => ({
+        id: item.view, label: item.label, href: item.path, icon: icons[item.view],
+        home: item.view === "dashboard",
+        count: item.view === "clients" ? stats.active_clients : item.view === "exercises" ? stats.exercises : undefined,
+      })) }]}
+      onNavigate={item => navigate(item.href ?? "/")} />;
+  }
 
   return (
     <aside className="flex h-screen w-60 flex-col border-r bg-sidebar">

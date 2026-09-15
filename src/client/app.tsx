@@ -1,3 +1,4 @@
+import { reportLocation } from "@clawnify/app/client";
 import { useEffect } from "preact/hooks";
 import { useMemo } from "preact/hooks";
 import { AppContext } from "./context";
@@ -25,6 +26,7 @@ export function App() {
   }, [isAgent]);
 
   const { view, id, navigate } = useRouter();
+  useEffect(() => { reportLocation(window.location.pathname + window.location.search); }, [view, id]);
   const appState = useAppState(isAgent, navigate);
   const { selectClient, selectWorkout } = appState;
 
