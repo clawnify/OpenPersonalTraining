@@ -1,4 +1,4 @@
-import { AppNav, embedded } from "@clawnify/app/client";
+import { AppNav } from "@clawnify/app/client";
 import { useApp } from "../context";
 import { Dumbbell, LayoutDashboard, Users, ClipboardList, CalendarDays, CreditCard } from "lucide-preact";
 import { Badge } from "@/components/ui/badge";
@@ -18,21 +18,20 @@ const navItems: { view: View; path: string; label: string; icon: typeof LayoutDa
 export function Sidebar({ currentView }: { currentView: View }) {
   const { navigate, stats } = useApp();
 
-  if (embedded) {
-    const icons: Record<View, string> = {
-      dashboard: "home", clients: "users", workouts: "clipboard-list",
-      exercises: "list-checks", schedule: "calendar-days", payments: "credit-card",
-    };
-    return <AppNav title="Personal Training" icon="users" active={currentView}
-      groups={[{ items: navItems.map(item => ({
-        id: item.view, label: item.label, href: item.path, icon: icons[item.view],
-        home: item.view === "dashboard",
-        count: item.view === "clients" ? stats.active_clients : item.view === "exercises" ? stats.exercises : undefined,
-      })) }]}
-      onNavigate={item => navigate(item.href ?? "/")} />;
-  }
-
-  return (
+  // One <AppNav>: inside Clawnify the dashboard draws this navigation, and
+  // anywhere else the app's own sidebar below is drawn from it.
+  const icons: Record<View, string> = {
+    dashboard: "home", clients: "users", workouts: "clipboard-list",
+    exercises: "list-checks", schedule: "calendar-days", payments: "credit-card",
+  };
+  return <AppNav title="Personal Training" icon="users" active={currentView}
+    groups={[{ items: navItems.map(item => ({
+      id: item.view, label: item.label, href: item.path, icon: icons[item.view],
+      home: item.view === "dashboard",
+      count: item.view === "clients" ? stats.active_clients : item.view === "exercises" ? stats.exercises : undefined,
+    })) }]}
+    onNavigate={item => navigate(item.href ?? "/")}
+    standalone={(nav) => (
     <aside className="flex h-screen w-60 flex-col border-r bg-sidebar">
       <div className="flex items-center gap-2 px-4 py-5">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -68,6 +67,7 @@ export function Sidebar({ currentView }: { currentView: View }) {
           </button>
         ))}
       </nav>
+      {nav.card && <div className="px-2 pb-2">{nav.card}</div>}
       <Separator />
       <div className="flex items-center justify-around px-4 py-4">
         <div className="text-center">
@@ -80,5 +80,5 @@ export function Sidebar({ currentView }: { currentView: View }) {
         </div>
       </div>
     </aside>
-  );
+      )} />;
 }
